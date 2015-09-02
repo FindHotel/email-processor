@@ -52,3 +52,9 @@ You should also be able to SSH into the instance::
 
 .. _Vagrantfile: https://github.com/InnovativeTravel/email-processor/blob/master/vagrant/Vagrantfile
 .. _vagrant: https://www.vagrantup.com/
+
+
+Who do I talk to?
+====
+
+German <german@innovativetravel.eu>
