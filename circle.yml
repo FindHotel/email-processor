@@ -1,0 +1,7 @@
+test:
+  pre:
+      - python internal/generate.py
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
