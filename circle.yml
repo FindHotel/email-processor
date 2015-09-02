@@ -4,3 +4,7 @@ test:
   post:
     - git submodule sync
     - git submodule update --init
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
