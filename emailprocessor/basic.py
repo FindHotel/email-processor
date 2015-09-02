@@ -6,4 +6,4 @@ class PrintSummarySMTPServer(BaseSMTPServer):
         print("Receiving message from: {}".format(peer))
         print("Message addressed from: {}".format(mailfrom))
         print("Message addressed to  : {}".format(rcpttos))
-        print("Message length        :".format(len(data)))
+        print("Message length        : {}".format(len(data)))
