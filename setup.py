@@ -44,8 +44,8 @@ PYTEST_FLAGS = ['--doctest-modules']
 #
 #     from emailprocessor import metadata
 #
-# However, when we do this, we also import `emailprocessor/__init__.py'. If this
-# imports names from some other modules and these modules have third-party
+# However, when we do this, we also import `emailprocessor/__init__.py'. If
+# this imports names from some other modules and these modules have third-party
 # dependencies that need installing (which happens after this file is run), the
 # script will crash. What we do instead is to load the metadata module by path
 # instead, effectively side-stepping the dependency problem. Please make sure

@@ -9,13 +9,7 @@ import click
 
 @click.group()
 def emailprocessor():
-    """Program entry point.
-
-    :param command: Name of a {project} command
-    :type command: str
-    :param argv: Parameters to pass to the command
-    "type command: :class:`list`
-    """
+    """Simple SMTP server for processing emails"""
     pass
 
 
