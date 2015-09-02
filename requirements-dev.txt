@@ -22,9 +22,10 @@ Pygments==1.6
 # Miscellaneous
 Paver==1.2.1
 colorama==0.2.7
+ipython
 
 # Cli
-Click==4.1
+Click==5.1
 
 # Explicitely add some Sphinx requirements to try to fix the broken CircleCI
 # build environment.
