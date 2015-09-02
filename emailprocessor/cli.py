@@ -26,5 +26,14 @@ def email_summary(ctx):
     server.run()
 
 
+@emailprocessor.command()
+@click.pass_context
+def save_attachments(ctx):
+    """Saves email attachments"""
+    server = basic.SaveAttachmentsSMTPServer((ctx.obj['address'],
+                                              ctx.obj['port']), None)
+    server.run()
+
+
 if __name__ == '__main__':
     emailprocessor()
