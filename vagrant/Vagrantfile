@@ -1,0 +1,88 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+# NOTE: Run this before the using this Vagrant file for the first time:
+# vagrant plugin install vagrant-aws
+# vagrant plugin install inifile
+#
+# You may also need to install the dummy AWS box if you didn't do that when 
+# you installed vagrant-aws:
+#
+# vagrant box add aws-dummy aws-dummy.box
+
+
+require 'inifile'
+
+# NOTE: Assumes that local public/private SSH key pairs are stored under ~/.ssh
+
+# Edit these settings to match your AWS VPC:
+keypair = 'innovativetravel-data-user'
+subnet_id = 'subnet-15711a62'
+region = 'eu-west-1'
+
+# List of AWS profiles to pass from the local machine to the vagrant box
+aws_profiles = [
+]
+# The list of local SSH keys to pass over to the vagrant box (e.g. SSH keys
+# for repos that need to be deployed in the vagrant box
+ssh_keys = [
+]
+
+# Read the AWS credentials from the local machine
+creds_file = File.join(File.expand_path('~'), '.aws', 'credentials')
+aws_creds = IniFile.load(creds_file)
+
+# Pass to the vagrant box only the selected credentials, ok my ruby sucks
+vagrant_aws_creds = aws_creds.dup()
+to_be_deleted = aws_creds.sections - aws_profiles
+to_be_deleted.each do |prof|
+    vagrant_aws_creds.delete_section(prof)
+end
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "aws-dummy"
+
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id = aws_creds['default']['aws_access_key_id']
+    aws.secret_access_key = aws_creds['default']['aws_secret_access_key']
+    aws.instance_type = 't2.micro'
+    aws.region = region
+    aws.keypair_name = keypair
+    aws.associate_public_ip = true
+    aws.subnet_id = subnet_id
+    aws.tags = {
+          'Name' => 'emailprocessor'
+        }
+
+    # The archlinux-ml AMI released on August 2015. This AMI is public.
+    aws.ami = "ami-3987dd4e"
+
+    override.ssh.username = "root"
+    override.ssh.private_key_path = File.join(File.expand_path('~'),
+                                              ".ssh", keypair + ".pem")
+  end
+
+  # Transfer all the selected SSH keys to the vagrant box
+  ssh_keys.each do |keyname|
+      config.vm.provision "secret-" + keyname, type: "file" do |s|
+          s.source = "~/.ssh/" + keyname
+          s.destination = "~/.ssh/" + keyname
+      end
+      config.vm.provision "public-" + keyname, type: "file" do |s|
+          s.source = "~/.ssh/" + keyname + ".pub"
+          s.destination = "~/.ssh/" + keyname + ".pub"
+      end
+  end
+
+  config.vm.provision "bootstrap", type: "shell" do |s|
+      s.path = "bootstrap.sh"
+      s.privileged = false
+  end
+
+  config.vm.provision "aws-credentials", type: "shell" do |s|
+      s.inline =
+          "echo '%s' > ~/.aws/credentials " % vagrant_aws_creds
+  end
+
+end
