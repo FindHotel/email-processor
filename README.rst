@@ -2,6 +2,10 @@
 Simple email processor
 =========================
 
+.. image:: https://circleci.com/gh/InnovativeTravel/email-processor.svg?style=svg
+    :target: https://circleci.com/gh/InnovativeTravel/email-processor
+
+
 This repo contains a set of SMTP servers that do various things with the 
 incoming emails.
 
