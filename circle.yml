@@ -1,4 +1,6 @@
-checkout:
+test:
+  pre:
+      - pip install -r requirements-dev.txt
   post:
     - git submodule sync
     - git submodule update --init
