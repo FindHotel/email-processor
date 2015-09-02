@@ -4,15 +4,19 @@
 # eval $(keychain --eval --agents ssh -Q --quiet ~/.ssh/spfa-deploy-key)
 
 # Create the emailprocessor project dir and virtualenv
-mkdir -p emailprocessor
-cd emailprocessor
+mkdir -p email-processor
+cd email-processor
 virtualenv venv
-rm -rf emailprocessor
-git clone git@github.com:InnovativeTravel/emailprocessor.git
 . venv/bin/activate
-cd emailprocessor
+
+rm -rf email-processor
+# Use SSH for private repos for which we have a deployment key:
+# git clone git@github.com:InnovativeTravel/emailprocessor.git
+# For public repos simply use HTTPS
+git clone https://github.com/InnovativeTravel/email-processor
 
 # Trying to be idempotent
+cd email-processor
 git checkout -- .
 pip install -e .
 cd

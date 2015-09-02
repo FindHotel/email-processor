@@ -51,8 +51,10 @@ Vagrant.configure("2") do |config|
     aws.keypair_name = keypair
     aws.associate_public_ip = true
     aws.subnet_id = subnet_id
+    # We attach the username to the instance to avoid conflicts between 
+    # developers sharing the same AWS account
     aws.tags = {
-          'Name' => 'emailprocessor'
+          'Name' => 'vagrant-emailprocessor-' + ENV['USER']
         }
 
     # The archlinux-ml AMI released on August 2015. This AMI is public.
