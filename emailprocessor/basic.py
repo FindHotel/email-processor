@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 from emailprocessor.common import BaseSMTPServer
 import email.parser
 
