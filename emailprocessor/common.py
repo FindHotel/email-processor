@@ -3,12 +3,12 @@
 
 
 from smtpd import SMTPServer
-from contextlib import ContextDecorator
+import contextlib
 import emailprocessor.config as config
 import asyncore
 
 
-class BaseSMTPServer(SMTPServer, ContextDecorator):
+class BaseSMTPServer(SMTPServer, contextlib.ContextDecorator):
     """Some basic enhancements on top of the vanilla SMTPServer class"""
     def __init__(self, addr=(config.address, config.port), remote_addr=None,
                  debug=False, timeout=None, **kwargs):
