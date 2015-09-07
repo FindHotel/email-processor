@@ -33,12 +33,14 @@ def email_summary(ctx):
 
 @emailprocessor.command()
 @click.pass_context
-def save_attachments(ctx):
+@click.option('--directory', default='/var/email-processor')
+def save_attachments(ctx, directory):
     """Saves email attachments"""
-    server = basic.SaveAttachmentsSMTPServer((ctx.obj['address'],
+    server = basic.SaveAttachmentsSMTPServer(addr=(ctx.obj['address'],
                                               ctx.obj['port']),
                                              debug=ctx.obj['debug'],
-                                             timeout=ctx.obj['timeout'])
+                                             timeout=ctx.obj['timeout'],
+                                             directory=directory)
     server.run()
 
 

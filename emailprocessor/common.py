@@ -12,10 +12,11 @@ class BaseSMTPServer(SMTPServer, contextlib.ContextDecorator):
     """Some basic enhancements on top of the vanilla SMTPServer class"""
     def __init__(self, addr=(config.address, config.port), remote_addr=None,
                  debug=False, timeout=None, **kwargs):
-        super().__init__(addr, remote_addr, **kwargs)
+        super().__init__(addr, remote_addr)
         self.debug = debug
         self.timeout = timeout
         print("Created SMTP server <{}:{}>".format(addr[0], addr[1]))
+
 
     def run(self):
         """Start listening for incoming emails"""
