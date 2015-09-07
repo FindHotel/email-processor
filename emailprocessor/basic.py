@@ -3,17 +3,18 @@
 
 
 from emailprocessor.common import BaseSMTPServer
+from emailprocessor.utils import _print
 import email.parser
 import os
 
 
 class PrintSummarySMTPServer(BaseSMTPServer):
-    def process_message(self, peer, mailfrom, rcpttos, data):
+    def _process(self, peer, mailfrom, rcpttos, data):
         """Prints summary stats of the email"""
-        print("Receiving message from: {}".format(peer))
-        print("Message addressed from: {}".format(mailfrom))
-        print("Message addressed to  : {}".format(rcpttos))
-        print("Message length        : {}".format(len(data)))
+        _print("Receiving message from: {}".format(peer))
+        _print("Message addressed from: {}".format(mailfrom))
+        _print("Message addressed to  : {}".format(rcpttos))
+        _print("Message length        : {}".format(len(data)))
 
 
 class SaveAttachmentsSMTPServer(BaseSMTPServer):
@@ -21,7 +22,7 @@ class SaveAttachmentsSMTPServer(BaseSMTPServer):
         super().__init__(**kwargs)
         self.directory = directory
 
-    def process_message(self, peer, mailfrom, rcpttos, data):
+    def _process(self, peer, mailfrom, rcpttos, data):
         """Saves email attachments in the specified directory"""
         parser = email.parser.Parser()
         msgobj = parser.parsestr(data)
@@ -39,4 +40,4 @@ class SaveAttachmentsSMTPServer(BaseSMTPServer):
             target_file = os.path.join(self.directory, filename)
             with open(target_file, 'wb') as fp:
                 fp.write(part.get_payload(decode=True))
-            print("==> Saved {}".format(target_file))
+            _print("Saved {}".format(target_file))

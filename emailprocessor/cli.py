@@ -15,10 +15,11 @@ import emailprocessor.config as config
 @click.option('--port', '-p', default=config.port)
 @click.option('--debug/--no-debug', default=False)
 @click.option('--timeout', default=None, type=int)
-def emailprocessor(ctx, address, port, debug, timeout):
+@click.option('--username', default=None, type=str)
+def emailprocessor(ctx, address, port, debug, timeout, username):
     """Simple SMTP server for processing emails"""
     ctx.obj = {'address': address, 'port': port, 'debug': debug,
-               'timeout': timeout}
+               'timeout': timeout, 'username': username}
 
 
 @emailprocessor.command()
@@ -26,8 +27,10 @@ def emailprocessor(ctx, address, port, debug, timeout):
 def email_summary(ctx):
     """Prints a summary of the email"""
     with basic.PrintSummarySMTPServer(
-            (ctx.obj['address'], ctx.obj['port']), debug=ctx.obj['debug'],
-            timeout=ctx.obj['timeout']) as server:
+            (ctx.obj['address'], ctx.obj['port']),
+            debug=ctx.obj['debug'],
+            timeout=ctx.obj['timeout'],
+            username=ctx.obj['username']) as server:
         server.run()
 
 
@@ -40,6 +43,7 @@ def save_attachments(ctx, directory):
                                               ctx.obj['port']),
                                              debug=ctx.obj['debug'],
                                              timeout=ctx.obj['timeout'],
+                                             username=ctx.obj['username'],
                                              directory=directory)
     server.run()
 
