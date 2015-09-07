@@ -4,6 +4,7 @@
 
 from emailprocessor.common import BaseSMTPServer
 import email.parser
+import os
 
 
 class PrintSummarySMTPServer(BaseSMTPServer):
@@ -21,5 +22,14 @@ class SaveAttachmentsSMTPServer(BaseSMTPServer):
         parser = email.parser.Parser()
         msgobj = parser.parsestr(data)
         for part in msgobj.walk():
-            attachment = self.email_parse_attachment(part)
-            print(attachment)
+            if part.is_multipart():
+                # multipart are just containers
+                continue
+            filename = part.get_filename()
+            if not filename:
+                # Not an attachment
+                continue
+            target_file = os.path.join(self.directory, filename)
+            with open(target_file, 'wb') as fp:
+                fp.write(part.get_payload(decode=True))
+            print("==> Saved {target_file}".format(target_file))
