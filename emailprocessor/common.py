@@ -33,6 +33,7 @@ class BaseSMTPServer(SMTPServer, contextlib.ContextDecorator,
         if recipient == self.username:
             _print("Processing ...")
             self._process(peer, mailfrom, rcpttos, data)
+            _print("Done!")
         else:
             _print("Ignoring email sent to {}".format(recipient))
 

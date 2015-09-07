@@ -47,6 +47,19 @@ def save_attachments(ctx, directory):
                                              directory=directory)
     server.run()
 
+@emailprocessor.command()
+@click.pass_context
+@click.option('--prefix', default='s3://innovativetravel-sandbox/bing')
+def bing(ctx, prefix):
+    """Moves Bing reports to S3"""
+    server = basic.BingReportsToS3SMTPServer(addr=(ctx.obj['address'],
+                                              ctx.obj['port']),
+                                             debug=ctx.obj['debug'],
+                                             timeout=ctx.obj['timeout'],
+                                             username=ctx.obj['username'],
+                                             prefix=prefix)
+    server.run()
+
 
 if __name__ == '__main__':
     emailprocessor()
