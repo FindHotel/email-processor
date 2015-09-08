@@ -30,12 +30,25 @@ class BaseSMTPServer(SMTPServer, contextlib.ContextDecorator,
         """Some generic processing common to all server"""
         recipient = rcpttos[0].split('@')[0]
         _print("Receiving email from {} ({})".format(mailfrom, peer))
-        if recipient == self.username:
+        username, params = self._process_recipient(recipient)
+        if username == self.username:
             _print("Processing ...")
-            self._process(peer, mailfrom, rcpttos, data)
+            self._process(peer, mailfrom, rcpttos, data, **params)
             _print("Done!")
         else:
-            _print("Ignoring email sent to {}".format(recipient))
+            _print("Ignoring email sent to {}".format(username))
+
+    @staticmethod
+    def _process_recipient(recipient):
+        """The recipient is used for authentication and to pass parameters 
+        to the processor"""
+        username, *params = recipient.split('.')
+        paramdict = {}
+        for param in params:
+            k, v = param.split('-')
+            paramdict[k] = v
+
+        return username, paramdict
 
     @abc.abstractmethod
     def _process(peer, mailfrom, rcpttos, data):

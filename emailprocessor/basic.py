@@ -12,7 +12,7 @@ import uuid
 
 
 class PrintSummarySMTPServer(BaseSMTPServer):
-    def _process(self, peer, mailfrom, rcpttos, data):
+    def _process(self, peer, mailfrom, rcpttos, data, **params):
         """Prints summary stats of the email"""
         _print("Receiving message from: {}".format(peer))
         _print("Message addressed from: {}".format(mailfrom))
@@ -21,7 +21,7 @@ class PrintSummarySMTPServer(BaseSMTPServer):
 
 
 class ProcessAttachmentsSMTPServer(BaseSMTPServer, metaclass=abc.ABCMeta):
-    def _process(self, peer, mailfrom, rcpttos, data):
+    def _process(self, peer, mailfrom, rcpttos, data, **params):
         """Saves email attachments in the specified directory"""
         parser = email.parser.Parser()
         msgobj = parser.parsestr(data)
@@ -33,10 +33,11 @@ class ProcessAttachmentsSMTPServer(BaseSMTPServer, metaclass=abc.ABCMeta):
             if not filename:
                 # Not an attachment
                 continue
-            self._process_attachment(part.get_payload(decode=True), filename)
+            self._process_attachment(part.get_payload(decode=True), filename,
+                **params)
 
     @abc.abstractmethod
-    def _process_attachment(self, payload, filename):
+    def _process_attachment(self, payload, filename, **params):
         """To be implemented by final classes"""
         pass
 
@@ -46,7 +47,7 @@ class SaveAttachmentsSMTPServer(ProcessAttachmentsSMTPServer):
         super().__init__(**kwargs)
         self.directory = directory
 
-    def _process_attachment(self, payload, filename):
+    def _process_attachment(self, payload, filename, **params):
         if not os.path.isdir(self.directory):
             os.makedirs(self.directory)
 
