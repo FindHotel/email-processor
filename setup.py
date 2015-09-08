@@ -255,7 +255,7 @@ setup_dict = dict(
     packages=find_packages(exclude=(TESTS_DIRECTORY,)),
     install_requires=[
         'click>=5.1',
-        'sh'
+        'boto3'
     ] + python_version_specific_requires,
     # Allow tests to be run with `python setup.py test'.
     tests_require=[

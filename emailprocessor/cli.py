@@ -8,6 +8,7 @@ import click
 import emailprocessor.basic as basic
 import emailprocessor.config as config
 import emailprocessor.bing as bing
+import os
 
 
 @click.group()
@@ -50,15 +51,19 @@ def save_attachments(ctx, directory):
 
 @emailprocessor.command()
 @click.pass_context
-@click.option('--prefix', default='s3://innovativetravel-sandbox/bing')
-def bing_to_s3(ctx, prefix):
+@click.option('--prefix',
+              default=os.environ.get('EMAILPROCESSOR_BING_TO_S3_PREFIX', ''))
+@click.option('--bucket',
+              default=os.environ.get('EMAILPROCESSOR_BING_TO_S3_BUCKET'))
+def bing_to_s3(ctx, prefix, bucket):
     """Moves Bing reports to S3"""
     server = bing.BingReportsToS3SMTPServer(addr=(ctx.obj['address'],
                                                   ctx.obj['port']),
                                             debug=ctx.obj['debug'],
                                             timeout=ctx.obj['timeout'],
                                             username=ctx.obj['username'],
-                                            prefix=prefix)
+                                            prefix=prefix,
+                                            bucket=bucket)
     server.run()
 
 

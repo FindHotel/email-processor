@@ -33,6 +33,6 @@ six
 babel
 pytz
 alabaster
-sphinx_rtd_theme
 
-sh
+# Better debugging
+ipdb
