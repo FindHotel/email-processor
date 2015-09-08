@@ -18,7 +18,7 @@ def runner():
 
 @pytest.yield_fixture(scope="module")
 def command():
-    yield emailprocessor.list_commands(None)[0]
+    yield 'email_summary'
 
 
 class TestCli():
