@@ -7,6 +7,7 @@ from __future__ import print_function
 import click
 import emailprocessor.basic as basic
 import emailprocessor.config as config
+import emailprocessor.bing as bing
 
 
 @click.group()
@@ -50,14 +51,14 @@ def save_attachments(ctx, directory):
 @emailprocessor.command()
 @click.pass_context
 @click.option('--prefix', default='s3://innovativetravel-sandbox/bing')
-def bing(ctx, prefix):
+def bing_to_s3(ctx, prefix):
     """Moves Bing reports to S3"""
-    server = basic.BingReportsToS3SMTPServer(addr=(ctx.obj['address'],
-                                              ctx.obj['port']),
-                                             debug=ctx.obj['debug'],
-                                             timeout=ctx.obj['timeout'],
-                                             username=ctx.obj['username'],
-                                             prefix=prefix)
+    server = bing.BingReportsToS3SMTPServer(addr=(ctx.obj['address'],
+                                                  ctx.obj['port']),
+                                            debug=ctx.obj['debug'],
+                                            timeout=ctx.obj['timeout'],
+                                            username=ctx.obj['username'],
+                                            prefix=prefix)
     server.run()
 
 
