@@ -29,6 +29,13 @@ aws_profiles = [
 ssh_keys = [
 ]
 
+# List of environment variables to pass over to the vagrant box
+# These will be added to the box .bash_profile
+env_vars = [
+    'EMAILPROCESSOR_BING_TO_S3_PREFIX',
+    'EMAILPROCESSOR_BING_TO_S3_BUCKET'
+]
+
 # Read the AWS credentials from the local machine
 creds_file = File.join(File.expand_path('~'), '.aws', 'credentials')
 aws_creds = IniFile.load(creds_file)
@@ -75,6 +82,14 @@ Vagrant.configure("2") do |config|
       config.vm.provision "public-" + keyname, type: "file" do |s|
           s.source = "~/.ssh/" + keyname + ".pub"
           s.destination = "~/.ssh/" + keyname + ".pub"
+      end
+  end
+
+  # Transfer env variables to the box
+  env_vars.each do |varname|
+      config.vm.provision varname, type: "shell" do |s|
+          s.inline = "echo 'export %s=%s' >> ~/.bash_profile" %
+              [varname, ENV[varname]]
       end
   end
 
