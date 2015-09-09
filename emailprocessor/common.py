@@ -4,7 +4,6 @@
 
 from smtpd import SMTPServer
 import contextlib
-import emailprocessor.config as config
 from emailprocessor.utils import _print
 import asyncore
 import uuid
@@ -14,7 +13,7 @@ import abc
 class BaseSMTPServer(SMTPServer, contextlib.ContextDecorator,
                      metaclass=abc.ABCMeta):
     """Some basic enhancements on top of the vanilla SMTPServer class"""
-    def __init__(self, addr=(config.address, config.port), remote_addr=None,
+    def __init__(self, addr=None, remote_addr=None,
                  debug=False, timeout=None, username=None, **kwargs):
         super().__init__(addr, remote_addr)
         self.debug = debug

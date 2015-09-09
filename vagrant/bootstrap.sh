@@ -9,6 +9,9 @@ cd email-processor
 virtualenv venv
 . venv/bin/activate
 
+# Activate the email-processor venv every time we SSH in the machine
+echo '. ~/email-processor/venv/bin/activate' >> ~/.bash_profile
+
 rm -rf email-processor
 # Use SSH for private repos for which we have a deployment key:
 # git clone git@github.com:InnovativeTravel/emailprocessor.git

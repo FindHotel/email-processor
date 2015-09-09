@@ -33,7 +33,10 @@ ssh_keys = [
 # These will be added to the box .bash_profile
 env_vars = [
     'EMAILPROCESSOR_BING_TO_S3_PREFIX',
-    'EMAILPROCESSOR_BING_TO_S3_BUCKET'
+    'EMAILPROCESSOR_BING_TO_S3_BUCKET',
+    'EMAILPROCESSOR_USERNAME',
+    'EMAILPROCESSOR_PORT',
+    'EMAILPROCESSOR_ADDRESS'
 ]
 
 # Read the AWS credentials from the local machine

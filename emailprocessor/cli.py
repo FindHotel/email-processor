@@ -6,20 +6,25 @@ from __future__ import print_function
 
 import click
 import emailprocessor.basic as basic
-import emailprocessor.config as config
 import emailprocessor.bing as bing
 import os
 
 
 @click.group()
 @click.pass_context
-@click.option('--address', '-a', default=config.address)
-@click.option('--port', '-p', default=config.port)
+@click.option('--address', '-a', default=None)
+@click.option('--port', '-p', default=None, type=int)
 @click.option('--debug/--no-debug', default=False)
 @click.option('--timeout', default=None, type=int)
 @click.option('--username', default=None, type=str)
 def emailprocessor(ctx, address, port, debug, timeout, username):
     """Simple SMTP server for processing emails"""
+    if username is None:
+        username = os.environ.get('EMAILPROCESSOR_USERNAME')
+    if port is None:
+        port = int(os.environ.get('EMAILPROCESSOR_PORT'))
+    if address is None:
+        address = os.environ.get('EMAILPROCESSOR_ADDRESS')
     ctx.obj = {'address': address, 'port': port, 'debug': debug,
                'timeout': timeout, 'username': username}
 

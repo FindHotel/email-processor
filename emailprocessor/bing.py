@@ -13,7 +13,7 @@ from collections import namedtuple
 
 
 BingHeader = namedtuple('BingReportHeader', ['first_day', 'last_day',
-    'aggregation', 'filter', 'rows'])
+    'aggregation', 'filter', 'rows', 'account', 'type', 'version'])
 
 
 class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
@@ -25,7 +25,7 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
         self.prefix = prefix
         self.__client = None
 
-    def get_s3key(self, payload, account, version):
+    def get_s3key(self, payload):
         """Produces a meaningful S3 key based on the report properties:
         reporting period, reporting account, etc"""
         # for now, a dummy method
@@ -38,15 +38,19 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             with myzip.open(file.filename, 'r') as myfile:
                 hdr = self._process_header(myfile)
 
-        filename = ("{acc}_{aggr}_{yf}-{mf}-{df}_{yl}-{ml}-{dl}_"
-                    "v{ver}.tsv.zip").format(
-            acc=filename_from_string(account or 'unknown'),
+        if hdr.version:
+            version = "_v{}".format(hdr.version)
+        else:
+            version = ''
+        filename = ("{acc}_{aggr}_{yf}-{mf}-{df}_{yl}-{ml}-{dl}"
+                    "{ver}.tsv.zip").format(
+            acc=filename_from_string(hdr.account or 'unknown'),
             aggr=hdr.aggregation,
-            ver=version or 'X',
+            ver=version,
             yf=hdr.first_day.year, mf=hdr.first_day.month, df=hdr.first_day.day,
             yl=hdr.last_day.year, ml=hdr.last_day.month, dl=hdr.last_day.day)
 
-        return os.path.join(self.prefix, filename)
+        return os.path.join(self.prefix, hdr.type.lower(), filename)
 
     @staticmethod
     def _process_report_time(text):
@@ -62,12 +66,24 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
                 last_day = date_parser.parsee(last_day)
         return (first_day, last_day)
 
+    @staticmethod
+    def _process_report_name(text):
+        account, reptype, repversion = [None]*3
+        match = re.match('"Report Name: (.+)".*', text)
+        if match:
+            name = match.groups()[0].lower()
+            account, reptype, repversion = name.split('-')
+        return (account, reptype, repversion)
+
     def _process_header(self, myfile):
         # Look for the "Report Time" row until we find a blank line
-        first_day, last_day, aggr, filterstr, nbrows = [None]*5
+        first_day, last_day, aggr, filterstr, nbrows, account, reptype, \
+            repversion = [None]*8
         for row in myfile:
             # Bing uses UTF-8 with BOM encoding
             text = row.decode('utf-8-sig')
+            if account is None:
+                account, reptype, repversion = self._process_report_name(text)
             if first_day is None:
                 first_day, last_day = self._process_report_time(text)
             match = re.match('"Report Aggregation: (\w+)".+', text)
@@ -80,7 +96,8 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             if match:
                 nbrows = int(match.groups()[0])
 
-        return BingHeader(first_day, last_day, aggr, filterstr, nbrows)
+        return BingHeader(first_day, last_day, aggr, filterstr, nbrows,
+                          account, reptype, repversion)
 
     @property
     def client(self):
@@ -89,9 +106,8 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             self.__client = boto3.client('s3')
         return self.__client
 
-    def _process_attachment(self, payload, filename, account=None,
-                            version=None):
-        s3key = self.get_s3key(payload, account, version)
+    def _process_attachment(self, payload, filename):
+        s3key = self.get_s3key(payload)
         self.client.put_object(ACL='private', Bucket=self.bucket, Body=payload,
                                Key=s3key)
         _print("Produced {}".format(s3key))
