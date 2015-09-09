@@ -12,7 +12,7 @@ from datetime import datetime
 from collections import namedtuple
 
 
-BingHeader = namedtuple('BingReportHeader', ['first_day', 'last_day', 'tz',
+BingHeader = namedtuple('BingReportHeader', ['first_day', 'last_day',
     'aggregation', 'filter', 'rows'])
 
 
@@ -38,11 +38,10 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             with myzip.open(file.filename, 'r') as myfile:
                 hdr = self._process_header(myfile)
 
-        filename = ("{acc}_{aggr}_{yf}-{mf}-{df}_{yl}-{ml}-{dl}_{tz}_"
+        filename = ("{acc}_{aggr}_{yf}-{mf}-{df}_{yl}-{ml}-{dl}_"
                     "v{ver}.tsv.zip").format(
             acc=filename_from_string(account or 'unknown'),
             aggr=hdr.aggregation,
-            tz=hdr.tz,
             ver=version or 'X',
             yf=hdr.first_day.year, mf=hdr.first_day.month, df=hdr.first_day.day,
             yl=hdr.last_day.year, ml=hdr.last_day.month, dl=hdr.last_day.day)
@@ -63,24 +62,14 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
                 last_day = date_parser.parsee(last_day)
         return (first_day, last_day)
 
-    @staticmethod
-    def _process_report_tz(text):
-        tz = None
-        match = re.match('.+Time Zone: \((.+)\).*', text)
-        if match:
-            tz = match.groups()[0].replace('+', '').replace(':', '-')
-        return tz
-
     def _process_header(self, myfile):
         # Look for the "Report Time" row until we find a blank line
-        first_day, last_day, tz, aggr, filterstr, nbrows = [None]*6
+        first_day, last_day, aggr, filterstr, nbrows = [None]*5
         for row in myfile:
             # Bing uses UTF-8 with BOM encoding
             text = row.decode('utf-8-sig')
             if first_day is None:
                 first_day, last_day = self._process_report_time(text)
-            if tz is None:
-                tz = self._process_report_tz(text)
             match = re.match('"Report Aggregation: (\w+)".+', text)
             if match:
                 aggr = match.groups()[0].lower()
@@ -91,7 +80,7 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             if match:
                 nbrows = int(match.groups()[0])
 
-        return BingHeader(first_day, last_day, tz, aggr, filterstr, nbrows)
+        return BingHeader(first_day, last_day, aggr, filterstr, nbrows)
 
     @property
     def client(self):
