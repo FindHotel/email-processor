@@ -42,15 +42,15 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             version = "_v{}".format(hdr.version)
         else:
             version = ''
-        filename = ("{acc}_{aggr}_{yf}-{mf}-{df}_{yl}-{ml}-{dl}"
-                    "{ver}.tsv.zip").format(
-            acc=filename_from_string(hdr.account or 'unknown'),
-            aggr=hdr.aggregation,
+        filename = ("{yf}-{mf:02d}-{df:02d}_{yl:02d}-{ml:02d}-"
+                    "{dl:02d}{ver}.tsv.zip").format(
             ver=version,
             yf=hdr.first_day.year, mf=hdr.first_day.month, df=hdr.first_day.day,
             yl=hdr.last_day.year, ml=hdr.last_day.month, dl=hdr.last_day.day)
 
-        return os.path.join(self.prefix, hdr.type.lower(), filename)
+        account = filename_from_string(hdr.account or 'unknown')
+        return os.path.join(self.prefix, hdr.type.lower(), account,
+                            hdr.aggregation, filename)
 
     @staticmethod
     def _process_report_time(text):
