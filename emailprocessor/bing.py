@@ -8,12 +8,11 @@ import re
 import io
 import dateutil.parser as date_parser
 from zipfile import ZipFile
-from datetime import datetime
 from collections import namedtuple
 
 
-BingHeader = namedtuple('BingReportHeader', ['first_day', 'last_day',
-    'aggregation', 'filter', 'rows', 'account', 'type', 'version'])
+BingHeader = namedtuple('BingReportHeader', "first_day last_day aggregation "
+                        "filter rows account type' version")
 
 
 class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
@@ -38,19 +37,11 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             with myzip.open(file.filename, 'r') as myfile:
                 hdr = self._process_header(myfile)
 
-        if hdr.version:
-            version = "_v{}".format(hdr.version)
-        else:
-            version = ''
-        filename = ("{yf}-{mf:02d}-{df:02d}_{yl:02d}-{ml:02d}-"
-                    "{dl:02d}{ver}.tsv.zip").format(
-            ver=version,
-            yf=hdr.first_day.year, mf=hdr.first_day.month, df=hdr.first_day.day,
-            yl=hdr.last_day.year, ml=hdr.last_day.month, dl=hdr.last_day.day)
-
-        account = filename_from_string(hdr.account or 'unknown')
-        return os.path.join(self.prefix, hdr.type.lower(), account,
-                            hdr.aggregation, filename)
+        unknown_account = "unknown-{}".format(uuid.uuid4())
+        account = filename_from_string(hdr.account or unknown_account)
+        return os.path.join(self.prefix, hdr.type.lower(), hdr.first_day.year,
+                            hdr.first_day.month, hdr.first_day.day,
+                            account + '.tsv.zip')
 
     @staticmethod
     def _process_report_time(text):
