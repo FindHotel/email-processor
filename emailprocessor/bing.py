@@ -1,4 +1,4 @@
-from emailprocessor.basic import ProcessAttachmentsSMTPServer
+from emailprocessor.basic import ProcessAttachments
 from emailprocessor.utils import _print, filename_from_string
 from emailprocessor.exceptions import InitError
 import uuid
@@ -15,7 +15,7 @@ BingHeader = namedtuple('BingReportHeader', "first_day last_day aggregation "
                         "filter rows account type' version")
 
 
-class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
+class BingReportsToS3(ProcessAttachments):
     def __init__(self, bucket=None, prefix='', **kwargs):
         super().__init__(**kwargs)
         if bucket is None:
@@ -23,6 +23,10 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
         self.bucket = bucket
         self.prefix = prefix
         self.__client = None
+
+    @property
+    def name(self):
+        return 'bing_report_to_s3'
 
     def get_s3key(self, payload):
         """Produces a meaningful S3 key based on the report properties:
@@ -97,7 +101,7 @@ class BingReportsToS3SMTPServer(ProcessAttachmentsSMTPServer):
             self.__client = boto3.client('s3')
         return self.__client
 
-    def _process_attachment(self, payload, filename):
+    def process_attachment(self, payload, filename):
         s3key = self.get_s3key(payload)
         self.client.put_object(ACL='private', Bucket=self.bucket, Body=payload,
                                Key=s3key)

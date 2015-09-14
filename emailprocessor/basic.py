@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from emailprocessor.common import BaseSMTPServer
+from emailprocessor import EmailProcessor
 from emailprocessor.utils import _print
 from datetime import datetime
 import email.parser
@@ -11,8 +11,8 @@ import abc
 import uuid
 
 
-class PrintSummarySMTPServer(BaseSMTPServer):
-    def _process(self, peer, mailfrom, rcpttos, data, **params):
+class PrintSummary(EmailProcessor):
+    def process(self, peer, mailfrom, rcpttos, data, **params):
         """Prints summary stats of the email"""
         _print("Receiving message from: {}".format(peer))
         _print("Message addressed from: {}".format(mailfrom))
@@ -20,8 +20,13 @@ class PrintSummarySMTPServer(BaseSMTPServer):
         _print("Message length        : {}".format(len(data)))
 
 
-class ProcessAttachmentsSMTPServer(BaseSMTPServer, metaclass=abc.ABCMeta):
-    def _process(self, peer, mailfrom, rcpttos, data, **params):
+    @property
+    def name(self):
+        return 'print_email_summary'
+
+
+class ProcessAttachments(EmailProcessor, metaclass=abc.ABCMeta):
+    def process(self, peer, mailfrom, rcpttos, data, **params):
         """Saves email attachments in the specified directory"""
         parser = email.parser.Parser()
         msgobj = parser.parsestr(data)
@@ -33,21 +38,21 @@ class ProcessAttachmentsSMTPServer(BaseSMTPServer, metaclass=abc.ABCMeta):
             if not filename:
                 # Not an attachment
                 continue
-            self._process_attachment(part.get_payload(decode=True), filename,
+            self.process_attachment(part.get_payload(decode=True), filename,
                 **params)
 
     @abc.abstractmethod
-    def _process_attachment(self, payload, filename, **params):
+    def process_attachment(self, payload, filename, **params):
         """To be implemented by final classes"""
         pass
 
 
-class SaveAttachmentsSMTPServer(ProcessAttachmentsSMTPServer):
+class SaveAttachments(ProcessAttachments):
     def __init__(self, directory=None, **kwargs):
         super().__init__(**kwargs)
         self.directory = directory
 
-    def _process_attachment(self, payload, filename, **params):
+    def process_attachment(self, payload, filename, **params):
         if not os.path.isdir(self.directory):
             os.makedirs(self.directory)
 
@@ -55,3 +60,8 @@ class SaveAttachmentsSMTPServer(ProcessAttachmentsSMTPServer):
         with open(target_file, 'wb') as fp:
             fp.write(payload)
         _print("Saved {}".format(target_file))
+
+    @property
+    def name(self):
+        return 'save_email_attachments'
+
