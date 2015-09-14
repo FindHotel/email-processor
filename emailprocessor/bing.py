@@ -12,7 +12,7 @@ from collections import namedtuple
 
 
 BingHeader = namedtuple('BingReportHeader', "first_day last_day aggregation "
-                        "filter rows account type' version")
+                        "filter rows account type version")
 
 
 class BingReportsToS3(ProcessAttachments):
@@ -43,8 +43,9 @@ class BingReportsToS3(ProcessAttachments):
 
         unknown_account = "unknown-{}".format(uuid.uuid4())
         account = filename_from_string(hdr.account or unknown_account)
-        return os.path.join(self.prefix, hdr.type.lower(), hdr.first_day.year,
-                            hdr.first_day.month, hdr.first_day.day,
+        return os.path.join(self.prefix, hdr.type.lower(), 
+                            str(hdr.first_day.year),
+                            str(hdr.first_day.month), str(hdr.first_day.day),
                             account + '.tsv.zip')
 
     @staticmethod
