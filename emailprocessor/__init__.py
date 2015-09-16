@@ -6,7 +6,6 @@ from smtpd import SMTPServer
 import contextlib
 from emailprocessor.utils import _print
 import asyncore
-import uuid
 import abc
 from collections import defaultdict
 
@@ -28,7 +27,7 @@ class EmailProcessor(metaclass=abc.ABCMeta):
 
 
 class EmailServer(SMTPServer, contextlib.ContextDecorator,
-                     metaclass=abc.ABCMeta):
+                  metaclass=abc.ABCMeta):
     """Some basic enhancements on top of the vanilla SMTPServer class"""
     def __init__(self, addr=None, remote_addr=None,  debug=False, timeout=None,
                  **kwargs):
@@ -54,7 +53,7 @@ class EmailServer(SMTPServer, contextlib.ContextDecorator,
 
     @staticmethod
     def _process_recipient(recipient):
-        """The recipient is used for authentication and to pass parameters 
+        """The recipient is used for authentication and to pass parameters
         to the processor"""
         username, *params = recipient.split('.')
         paramdict = {}

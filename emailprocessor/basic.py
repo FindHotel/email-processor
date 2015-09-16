@@ -19,7 +19,6 @@ class PrintSummary(EmailProcessor):
         _print("Message addressed to  : {}".format(rcpttos))
         _print("Message length        : {}".format(len(data)))
 
-
     @property
     def name(self):
         return 'print_email_summary'
@@ -39,7 +38,7 @@ class ProcessAttachments(EmailProcessor, metaclass=abc.ABCMeta):
                 # Not an attachment
                 continue
             self.process_attachment(part.get_payload(decode=True), filename,
-                **params)
+                                    **params)
 
     @abc.abstractmethod
     def process_attachment(self, payload, filename, **params):
@@ -64,4 +63,3 @@ class SaveAttachments(ProcessAttachments):
     @property
     def name(self):
         return 'save_email_attachments'
-

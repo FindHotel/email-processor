@@ -12,7 +12,7 @@ from collections import namedtuple
 
 
 BingHeader = namedtuple('BingReportHeader', "first_day last_day aggregation "
-                        "filter rows account type' version")
+                        "filter rows account type version")
 
 
 class BingReportsToS3(ProcessAttachments):

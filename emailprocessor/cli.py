@@ -44,7 +44,7 @@ def _resolve_username(username):
     if username is None:
         username = os.environ.get('EMAILPROCESSOR_USERNAME')
         if username is None:
-            username=str(uuid.uuid4())
+            username = str(uuid.uuid4())
     return username
 
 
