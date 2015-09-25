@@ -29,6 +29,7 @@ Click==5.1
 
 # Explicitely add some Sphinx requirements to try to fix the broken CircleCI
 # build environment.
+sphinx_rtd_theme
 six
 babel
 pytz
