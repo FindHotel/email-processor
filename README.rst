@@ -61,6 +61,9 @@ where:
 * ``$S3_BUCKET`` is the name of the target S3 bucket
 * ``$S3_PREFIX`` is the target S3 prefix (the destination path in S3)
 
+Once the SMTP server is running you should direct your Bing reports to 
+``$USERNAME@$ADDRESS``.
+
 .. _blog: http://blog.innovativetravel.eu/2015/09/automate-bing-ads-reporting-the-lazy-way/
 
 
