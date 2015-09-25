@@ -4,11 +4,9 @@
 
 from emailprocessor import EmailProcessor
 from emailprocessor.utils import _print
-from datetime import datetime
 import email.parser
 import os
 import abc
-import uuid
 
 
 class PrintSummary(EmailProcessor):
