@@ -29,13 +29,8 @@ def emailprocessor(ctx, address, port, debug, timeout, username, certkey,
         address = os.environ.get('EMAILPROCESSOR_ADDRESS')
     if port is None:
         port = int(os.environ.get('EMAILPROCESSOR_PORT'))
-    if certkey is None:
-        certkey = os.environ.get('EMAILPROCESSOR_CERTKEY')
-    if certfile is None:
-        certfile = os.environ.get('EMAILPROCESSOR_CERTFILE')
 
-    server = EmailServer(addr=(address, port), debug=debug, timeout=timeout,
-                         certfile=certfile, certkey=certkey)
+    server = EmailServer(addr=(address, port), debug=debug, timeout=timeout)
 
     ctx.obj = {'server': server, 'username': username}
 
