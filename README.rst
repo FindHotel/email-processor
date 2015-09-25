@@ -55,11 +55,11 @@ exactly what is described in our blog you just need to run::
 
 where:
 
-* `$ADDRESS` is the public IP or DNS name of your server
-* `$USERNAME` is the email recipient that will be associated with the processing
+* ``$ADDRESS`` is the public IP or DNS name of your server
+* ``$USERNAME`` is the email recipient that will be associated with the processing
   of incoming Bing Ads emails
-* `$S3_BUCKET` is the name of the target S3 bucket
-* `$S3_PREFIX` is the target S3 prefix (the destination path in S3)
+* ``$S3_BUCKET`` is the name of the target S3 bucket
+* ``$S3_PREFIX`` is the target S3 prefix (the destination path in S3)
 
 .. _blog: http://blog.innovativetravel.eu/2015/09/automate-bing-ads-reporting-the-lazy-way/
 
@@ -73,7 +73,7 @@ vagrant_. Install vagrant and then install the required plug-ins::
     vagrant plugin install vagrant-aws
     vagrant plugin install inifile
 
-Then install the dummy AWS box that you will find in the `vagrant` directory
+Then install the dummy AWS box that you will find in the ``vagrant`` directory
 of this repo::
 
     vagrant box add aws-dummy aws-dummy.box
