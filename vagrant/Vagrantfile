@@ -11,21 +11,22 @@
 #
 # vagrant box add aws-dummy aws-dummy.box
 
-
 require 'inifile'
 
-# NOTE: Assumes that local public/private SSH key pairs are stored under ~/.ssh
-
+# ------------------------------------------------------------------------------
+# NOTE: You must configure your AWS credentials before starting this box
 # Edit these settings to match your AWS VPC:
-keypair = 'innovativetravel-data-user'
+keypair = 'innovativetravel-etl'
 subnet_id = 'subnet-15711a62'
 region = 'eu-west-1'
+# ------------------------------------------------------------------------------
 
 # List of AWS profiles to pass from the local machine to the vagrant box
 aws_profiles = [
 ]
 # The list of local SSH keys to pass over to the vagrant box (e.g. SSH keys
 # for repos that need to be deployed in the vagrant box
+# NOTE: Assumes that local public/private SSH key pairs are stored under ~/.ssh
 ssh_keys = [
 ]
 
@@ -68,8 +69,8 @@ Vagrant.configure("2") do |config|
           'Name' => 'vagrant-emailprocessor-' + ENV['USER']
         }
 
-    # The archlinux-ml AMI released on August 2015. This AMI is public.
-    aws.ami = "ami-3987dd4e"
+    # The archlinux AMI released on August 2015. This AMI is public.
+    aws.ami = "ami-e3775e94"
 
     override.ssh.username = "root"
     override.ssh.private_key_path = File.join(File.expand_path('~'),
