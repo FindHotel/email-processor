@@ -1,4 +1,11 @@
 ---
+# This is a template configuration. The Vagrantfile will actually read the
+# configuration from .aws-config.yaml. So:
+#
+# 1) Copy this file: cp aws-config.yaml .aws-config.yaml
+# 2) Edit the contents of .aws-config.yaml
+# 3) You are ready to go: vagrant up
+
 aws:
     # The name of the SSH keypair that will be used to access the instance.
     # Expects finding ~/.ssh/my_ssh_keypair_name.pem in your system
