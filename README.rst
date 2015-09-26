@@ -84,7 +84,7 @@ email processor safer:
 * Use an `SSL-enabled SMTP server`_. This is something we plan to do in the near
   future.
 * Use a whitelist for the sender's IP address. For instance, if you deploy the
-  Bing Ads report processor in AWS-EC2 you should associate your EC2 instance
+  Bing Ads report processor in `AWS-EC2`_ you should associate your EC2 instance
   to a `security group`_ that allows incoming emails only from Bing Ads'
   email servers. Alternatively, you could use `network ACLs`_ to achieve 
   the same result.
@@ -93,6 +93,7 @@ email processor safer:
   a random UUID as the recipient. Emails sent to any other recipient will be
   simply ignored.
 
+.. _AWS-EC2: https://aws.amazon.com/ec2/
 .. _security group: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html
 .. _network ACLs: http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html
 .. _SSL-enabled SMTP server: https://github.com/bcoe/secure-smtpd
@@ -109,11 +110,13 @@ will take care of very soon.
 Development environment on AWS
 ====
 
-You can easily set up a development environment in the AWS cloud with
+You can easily set up a development environment in the `AWS cloud`_ with
 vagrant_. Install vagrant and then install the required plug-ins::
 
     vagrant plugin install vagrant-aws
     vagrant plugin install inifile
+
+.. _AWS cloud: https://aws.amazon.com/ec2/
 
 Then install the dummy AWS box that you will find in the ``vagrant`` directory
 of this repo::
