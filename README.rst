@@ -102,7 +102,7 @@ email processor safer:
 Caveats
 ====
 
-Apart from the security issues, a caveat a STMP server instance can be
+Apart from the security issues, a caveat is that a STMP server instance can be
 associated only to one email processor. This is actually a very easy fix that we
 will take care of very soon.
 
