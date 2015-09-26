@@ -5,6 +5,7 @@
 # NOTE: Run this before the using this Vagrant file for the first time:
 # vagrant plugin install vagrant-aws
 # vagrant plugin install inifile
+# vagrant plugin install yaml
 #
 # You may also need to install the dummy AWS box if you didn't do that when 
 # you installed vagrant-aws:
@@ -12,16 +13,16 @@
 # vagrant box add aws-dummy aws-dummy.box
 
 require 'inifile'
+require 'yaml'
 
-# -----------------------------------------------------------------------------
-# NOTE: You must configure your AWS credentials before starting this box
-# Edit these settings to match your AWS VPC:
-keypair = 'innovativetravel-data-etl'
-subnet_id = 'subnet-15711a62'
-region = 'eu-west-1'
-# The name of the instance profile that will be associated to the instance
-role = 'DataSandboxRole'
-# -----------------------------------------------------------------------------
+# Read the local Vagrant configuration
+vagrant_config = YAML.load_file('.config.yaml')
+keypair = vagrant_config['aws']['keypair']
+subnet_id = vagrant_config['aws']['subnet_id']
+region = vagrant_config['aws']['region']
+role = vagrant_config['aws']['role']
+aws_access_key_id = vagrant_config['aws']['access_key_id']
+aws_secret_access_key = vagrant_config['aws']['secret_access_key']
 
 # List of AWS profiles to pass from the local machine to the vagrant box
 aws_profiles = [
@@ -57,8 +58,14 @@ Vagrant.configure("2") do |config|
   config.vm.box = "aws-dummy"
 
   config.vm.provider :aws do |aws, override|
-    aws.access_key_id = aws_creds['default']['aws_access_key_id']
-    aws.secret_access_key = aws_creds['default']['aws_secret_access_key']
+    aws.access_key_id = (
+        aws_access_key_id or
+        ENV['AWS_ACCESS_KEY_ID'] or
+        aws_creds['default']['aws_access_key_id'])
+    aws.secret_access_key = (
+        aws_secret_access_key or 
+        ENV['SECRETS_ACCESS_KEY_ID'] or
+        aws_creds['default']['aws_secret_access_key'])
     aws.instance_type = 't2.micro'
     aws.iam_instance_profile_name = role
     aws.region = region

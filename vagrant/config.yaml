@@ -1,0 +1,20 @@
+---
+aws:
+    # The name of the SSH keypair that will be used to access the instance.
+    # Expects finding ~/.ssh/my_ssh_keypair_name.pem in your system
+    keypair: my_ssh_keypair_name
+
+    # The physical ID of the subnet where the instance will be launched
+    subnet_id: subnet-12345abcd
+
+    # The AWS region where the subnet is located
+    region: eu-west-1
+
+    # The name of the instance profile that will be associated to the instance
+    role: MyInstanceRole
+
+    # Your AWS credentials. If you leave this empty the Vagrant file will look
+    # for credentials in your environment or in ~/.aws/credentials. Look in the
+    # Vagrantfile for more details.
+    access_key_id:
+    secret_access_key:
