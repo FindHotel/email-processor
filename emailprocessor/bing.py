@@ -31,7 +31,6 @@ class BingReportsToS3(ProcessAttachments):
     def get_s3key(self, payload):
         """Produces a meaningful S3 key based on the report properties:
         reporting period, reporting account, etc"""
-        # for now, a dummy method
         with ZipFile(io.BytesIO(payload)) as myzip:
             # Should contain just one file: the report
             file = myzip.filelist[0]
