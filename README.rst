@@ -86,8 +86,8 @@ email processor safer:
 * Use a whitelist for the sender's IP address. For instance, if you deploy the
   Bing Ads report processor in AWS-EC2 you should associate your EC2 instance
   to a `security group`_ that allows incoming emails only from Bing Ads'
-  email servers. Alternatively, you could use `network ACLs` to achieve the same
-  result.
+  email servers. Alternatively, you could use `network ACLs`_ to achieve 
+  the same result.
 * Use a difficult to guess username as the recipient of the emails. If you don't
   provide a username during invokation, the email processor will generate
   a random UUID as the recipient. Emails sent to any other recipient will be
