@@ -18,11 +18,8 @@ import uuid
 @click.option('--port', '-p', default=None, type=int)
 @click.option('--debug/--no-debug', default=False)
 @click.option('--timeout', default=None, type=int)
-@click.option('--certfile', default=None, type=str)
-@click.option('--certkey', default=None, type=str)
 @click.option('--username', default=None, type=str)
-def emailprocessor(ctx, address, port, debug, timeout, username, certkey,
-                   certfile):
+def emailprocessor(ctx, address, port, debug, timeout, username):
     """Simple SMTP server for processing emails"""
     username = _resolve_username(username)
     if address is None:
