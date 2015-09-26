@@ -39,3 +39,4 @@ pip-log.txt
 
 ## Vagrant stuff
 .vagrant
+.aws-config.yaml
