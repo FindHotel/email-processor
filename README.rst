@@ -115,6 +115,7 @@ vagrant_. Install vagrant and then install the required plug-ins::
 
     vagrant plugin install vagrant-aws
     vagrant plugin install inifile
+    vagrant plugin install yaml
 
 .. _AWS cloud: https://aws.amazon.com/ec2/
 
@@ -124,8 +125,12 @@ of this repo::
     vagrant box add aws-dummy aws-dummy.box
 
 
-Then edit the Vagrantfile_ so that it matches your AWS VPC configuration. You
-should then be ready to fire up the AWS instance using::
+Go to the vagrant directory and copy the vagrant config template::
+
+    cp config.yaml .config.yaml
+
+Then edit the `.config.yaml` you just created so that it matches your AWS
+configuration. You should then be ready to fire up the AWS instance using::
 
     vagrant up
 
@@ -133,8 +138,12 @@ You should also be able to SSH into the instance::
 
     vagrant ssh
 
-.. _Vagrantfile: https://github.com/InnovativeTravel/email-processor/blob/master/vagrant/Vagrantfile
 .. _vagrant: https://www.vagrantup.com/
+
+Don't forget to destroy the instance when you are done. Otherwise you will keep
+paying for it::
+
+    vagrant destroy
 
 
 Deployment
