@@ -129,7 +129,7 @@ Go to the vagrant directory and copy the vagrant config template::
 
     cp config.yaml .config.yaml
 
-Then edit the `.config.yaml` you just created so that it matches your AWS
+Then edit the ``.config.yaml`` you just created so that it matches your AWS
 configuration. You should then be ready to fire up the AWS instance using::
 
     vagrant up
