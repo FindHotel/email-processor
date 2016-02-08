@@ -2,8 +2,8 @@
 Simple email processor
 =========================
 
-.. image:: https://circleci.com/gh/InnovativeTravel/email-processor.svg?style=svg
-    :target: https://circleci.com/gh/InnovativeTravel/email-processor
+.. image:: https://travis-ci.org/InnovativeTravel/email-processor.svg?branch=master
+    :target: https://travis-ci.org/InnovativeTravel/email-processor
 
 
 This repo contains a set of SMTP servers that do various things with the
@@ -11,11 +11,11 @@ incoming emails.
 
 
 Installation
-=====
+============
 
 ::
 
-    pip install git+https://github.com/InnovativeTravel/emailprocessor
+    pip install git+https://github.com/InnovativeTravel/email-processor
 
 
 Usage
@@ -31,7 +31,7 @@ The basic usage is as follows::
 
 
 Examples
-=====
+========
 
 
 Print email summary
@@ -75,7 +75,7 @@ Once the SMTP server is running you should direct your Bing reports to
 
 
 Security considerations
-====
+=======================
 
 This email processor is just a proof-of-concept so security considerations were
 not a concern for us. There are some things you can and should do to make your
@@ -100,7 +100,7 @@ email processor safer:
 
 
 Caveats
-====
+=======
 
 Apart from the security issues, a caveat is that a STMP server instance can be
 associated only to one email processor. This is actually a very easy fix that we
@@ -108,7 +108,7 @@ will take care of very soon.
 
 
 Development environment on AWS
-====
+==============================
 
 You can easily set up a development environment in the `AWS cloud`_ with
 vagrant_. Install vagrant and then install the required plug-ins::
@@ -147,12 +147,12 @@ paying for it::
 
 
 Deployment
-=====
+==========
 
 To be done.
 
 
 Who do I talk to?
-====
+=================
 
 German <german@innovativetravel.eu>
