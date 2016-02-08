@@ -1,0 +1,13 @@
+sudo: false
+language: python
+python: "3.4.2"
+before_install:
+- git submodule sync
+- git submodule update --init
+install:
+- pip install -r requirements-dev.txt
+script:
+- python setup.py test
+notifications:
+  slack:
+    secure: MGeRARlIZrakz+wO6cQHHCeSP5Jcuwg340llwh0oS4gcj8V5yeSzOKyVOf/5zLMT+LmkKZ8Z+7VsXNabBbuatKSHEzmgxCASB8w8LtzDWnl1+QxePoThPJVIzEo3OFUUygRrhGhnhGQEQWpca+IOmmT3bcdpgRSqWay6SQoqjcoU2J+wqVaqaI7ozGk9H/d2NSavRP8stn8WIvUIjBeTxnma/XsbOVH2b3hebusr3norpM3eNHH7Ei1xgJLe1oYUlA4WbGpYWqoR1f+WwPwK956pNPGL3uKHC47bSNobF1ycru7MFEMWV3bvl2oNW8r+gX7RHmPlclR8q+aY0K5w+wNe+18DksU3suyAmp9LNcFlp/YNOZqZ0apLmx1rnuZZCeqyEq5nOjWhWwkldQnOIw9MuD5sXppyV3m1We57A4D5p740mZbZuptbPVkG7e/UN6D/nOSb0Bgqqe6nLKDHl1Q7JWcyThZmcReP5w9QDjI/BLqOx5CO9b6e/ol5DNp09wIXNUn6pJJTgd8zufCG+M2w+dpk18nd0E/xJCjOafV/BPTJuNpP0KTuDskMP2ahKecUs0+OoAITk+LP5wenAlYZlMStFPBlogtzq3F/CSDIg0eZR/2mCFnw1K41ASQxEbzR2QrX6vYMYiQo8kD0iV4TC846LiHY5HOBGy2VxYM=
